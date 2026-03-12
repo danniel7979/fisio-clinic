@@ -1,0 +1,1 @@
+curl -X POST http://localhost:3000/api/reminders -H "Authorization: Bearer recordatorios123"

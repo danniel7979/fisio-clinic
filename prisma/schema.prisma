@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum ReminderStatus {
+  PENDING
+  SENT
+  FAILED
+  CANCELLED
+}
+
+model Appointment {
+  id             Int            @id @default(autoincrement())
+  name           String
+  phone          String
+  email          String?
+  service        String
+  appointmentAt  DateTime
+  notes          String?
+  whatsappOptIn  Boolean        @default(false)
+  reminderStatus ReminderStatus @default(PENDING)
+  reminderSentAt DateTime?
+  createdAt      DateTime       @default(now())
+}
