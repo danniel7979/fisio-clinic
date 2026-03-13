@@ -49,7 +49,6 @@ export async function POST(req: Request) {
           gte: start,
           lte: end,
         },
-        whatsappOptIn: true,
         reminderStatus: "PENDING",
       },
       orderBy: {
@@ -77,10 +76,7 @@ export async function POST(req: Request) {
           },
         });
 
-        results.push({
-          id: appointment.id,
-          status: "sent",
-        });
+        results.push({ id: appointment.id, status: "sent" });
       } catch (error) {
         console.error("Error enviando SMS", error);
 
@@ -91,10 +87,7 @@ export async function POST(req: Request) {
           },
         });
 
-        results.push({
-          id: appointment.id,
-          status: "failed",
-        });
+        results.push({ id: appointment.id, status: "failed" });
       }
     }
 
@@ -111,4 +104,4 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
-}*/
+}
