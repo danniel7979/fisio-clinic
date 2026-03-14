@@ -33,7 +33,6 @@ export default async function AdminPage() {
               <th style={thStyle}>Email</th>
               <th style={thStyle}>Servicio</th>
               <th style={thStyle}>Fecha</th>
-              <th style={thStyle}>WhatsApp</th>
               <th style={thStyle}>Recordatorio</th>
               <th style={thStyle}>Acciones</th>
             </tr>
@@ -47,9 +46,6 @@ export default async function AdminPage() {
                 <td style={tdStyle}>{appointment.service}</td>
                 <td style={tdStyle}>
                   {new Date(appointment.appointmentAt).toLocaleString("es-ES")}
-                </td>
-                <td style={tdStyle}>
-                  {appointment.whatsappOptIn ? "Sí" : "No"}
                 </td>
                 <td style={tdStyle}>{appointment.reminderStatus}</td>
                 <td style={tdStyle}>
