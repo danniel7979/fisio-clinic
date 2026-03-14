@@ -122,7 +122,6 @@ export default function HomePage() {
     service: "Fisioterapia general",
     appointmentAt: "",
     notes: "",
-    whatsappOptIn: true,
   });
 
   const [message, setMessage] = useState("");
@@ -154,7 +153,6 @@ export default function HomePage() {
       service: "Fisioterapia general",
       appointmentAt: "",
       notes: "",
-      whatsappOptIn: true,
     });
   }
 
@@ -257,16 +255,6 @@ export default function HomePage() {
                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
               />
 
-              <label className="flex items-center gap-2 text-sm text-slate-700">
-                <input
-                  type="checkbox"
-                  checked={form.whatsappOptIn}
-                  onChange={(e) =>
-                    setForm({ ...form, whatsappOptIn: e.target.checked })
-                  }
-                />
-                Acepto recibir recordatorios de la cita
-              </label>
 
               <button
                 type="submit"

@@ -49,7 +49,7 @@ export async function POST(req: Request) {
           gte: start,
           lte: end,
         },
-        reminderStatus: "PENDING",
+        reminderStatus: "PENDIENTE",
       },
       orderBy: {
         appointmentAt: "asc",
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
         await prisma.appointment.update({
           where: { id: appointment.id },
           data: {
-            reminderStatus: "SENT",
+            reminderStatus: "ENVIADA",
             reminderSentAt: new Date(),
           },
         });
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
         await prisma.appointment.update({
           where: { id: appointment.id },
           data: {
-            reminderStatus: "FAILED",
+            reminderStatus: "FALLIDA",
           },
         });
 

@@ -110,7 +110,6 @@ export async function POST(req: Request) {
       service,
       appointmentAt,
       notes,
-      whatsappOptIn,
     } = parsed.data;
 
     const appointmentDate = new Date(appointmentAt);
@@ -130,7 +129,7 @@ export async function POST(req: Request) {
       where: {
         appointmentAt: appointmentDate,
         reminderStatus: {
-          not: "CANCELLED",
+          not: "CANCELADO",
         },
       },
     });
@@ -150,7 +149,6 @@ export async function POST(req: Request) {
         service,
         appointmentAt: appointmentDate,
         notes: notes || null,
-        whatsappOptIn: Boolean(whatsappOptIn),
       },
     });
 
