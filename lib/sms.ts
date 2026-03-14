@@ -9,7 +9,7 @@ export async function sendSMS(to: string, message: string) {
     body: JSON.stringify({
       message,
       to,
-      sender_id: process.env.SMS_SENDER_ID || "Clinica",
+      sender_id: process.env.SMS_SENDER_ID || "Seguridad Social",
     }),
   });
 
