@@ -255,6 +255,11 @@ export default function HomePage() {
                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
               />
 
+              <label style={{ fontSize: "14px", display: "block", marginTop: "10px" }}>
+                <input type="checkbox" required /> He leído y acepto la{" "}
+                <a href="/politica-privacidad">política de privacidad</a>
+              </label>
+
 
               <button
                 type="submit"
