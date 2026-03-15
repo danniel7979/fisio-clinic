@@ -10,7 +10,7 @@ export default function Footer() {
       }}
     >
       <div style={{ marginBottom: "10px" }}>
-        © {new Date().getFullYear()} NOMBRE_CLINICA
+        © {new Date().getFullYear()} JELUDA
       </div>
 
       <div>
