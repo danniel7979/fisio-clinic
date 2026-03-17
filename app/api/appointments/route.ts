@@ -123,7 +123,7 @@ export async function POST(req: Request) {
 
     const { name, phone, email, service, appointmentAt, notes } = parsed.data;
 
-    const appointmentDate = new Date(appointmentAt);
+    const appointmentDate = new Date(appointmentAt + ":00+01:00");
 
     if (isNaN(appointmentDate.getTime())) {
       return NextResponse.json({ error: "Fecha inválida" }, { status: 400 });
