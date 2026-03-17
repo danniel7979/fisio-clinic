@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import type { CSSProperties } from "react";
-import CancelButton from "./CancelButton";
+import DeleteButton from "./DeleteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -49,11 +49,7 @@ export default async function AdminPage() {
                 </td>
                 <td style={tdStyle}>{appointment.reminderStatus}</td>
                 <td style={tdStyle}>
-                  {appointment.reminderStatus === "CANCELLED" ? (
-                    "Ya cancelada"
-                  ) : (
-                    <CancelButton id={appointment.id} />
-                  )}
+                  <DeleteButton id={appointment.id} />
                 </td>
               </tr>
             ))}
