@@ -6,33 +6,30 @@ export default function DeleteButton({ id }: { id: number }) {
   const router = useRouter();
 
   async function handleDelete() {
-    const ok = window.confirm("¿Seguro que quieres borrar esta cita?");
-    if (!ok) return;
+    const confirmDelete = confirm("¿Seguro que quieres borrar esta cita?");
+    if (!confirmDelete) return;
 
     const res = await fetch(`/api/appointments/${id}`, {
       method: "DELETE",
     });
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      alert(data.error || "No se pudo borrar la cita");
-      return;
+    if (res.ok) {
+      router.refresh();   // ← esto hace que desaparezca la cita
+    } else {
+      alert("Error al borrar la cita");
     }
-
-    router.refresh();
   }
 
   return (
     <button
       onClick={handleDelete}
       style={{
-        background: "#111",
+        background: "#dc2626",
         color: "white",
         border: "none",
         padding: "6px 10px",
-        cursor: "pointer",
         borderRadius: "6px",
+        cursor: "pointer",
       }}
     >
       Borrar

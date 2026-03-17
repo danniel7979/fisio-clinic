@@ -10,10 +10,7 @@ export async function DELETE(
     const appointmentId = Number(id);
 
     if (Number.isNaN(appointmentId)) {
-      return NextResponse.json(
-        { error: "ID inválido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "ID inválido" }, { status: 400 });
     }
 
     const existing = await prisma.appointment.findUnique({
@@ -21,28 +18,18 @@ export async function DELETE(
     });
 
     if (!existing) {
-      return NextResponse.json(
-        { error: "La cita no existe" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "La cita no existe" }, { status: 404 });
     }
 
-    const updated = await prisma.appointment.update({
+    await prisma.appointment.delete({
       where: { id: appointmentId },
-      data: {
-        reminderStatus: "CANCELLED",
-      },
     });
 
-    return NextResponse.json({
-      message: "Cita cancelada correctamente",
-      appointment: updated,
-    });
+    return NextResponse.json({ ok: true, message: "Cita borrada" });
   } catch (error) {
-    console.error("Error cancelando cita:", error);
-
+    console.error("Error borrando cita:", error);
     return NextResponse.json(
-      { error: "Error interno al cancelar la cita" },
+      { error: "Error interno al borrar la cita" },
       { status: 500 }
     );
   }
