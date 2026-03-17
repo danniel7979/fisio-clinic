@@ -87,6 +87,27 @@ import { prisma } from "@/lib/prisma";
 import { appointmentSchema } from "@/lib/validators";
 import { sendSMS } from "@/lib/sms";
 
+function parseLocalDateTime(input: string) {
+  if (!input || !input.includes("T")) return null;
+
+  const [datePart, timePart] = input.split("T");
+  if (!datePart || !timePart) return null;
+
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hour, minute] = timePart.split(":").map(Number);
+
+  if (
+    !year || !month || !day ||
+    Number.isNaN(hour) || Number.isNaN(minute)
+  ) {
+    return null;
+  }
+
+  const date = new Date(year, month - 1, day, hour, minute, 0, 0);
+
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("es-ES", {
     day: "2-digit",
@@ -123,10 +144,13 @@ export async function POST(req: Request) {
 
     const { name, phone, email, service, appointmentAt, notes } = parsed.data;
 
-    const appointmentDate = new Date(appointmentAt + ":00+01:00");
+    const appointmentDate = parseLocalDateTime(appointmentAt);
 
-    if (isNaN(appointmentDate.getTime())) {
-      return NextResponse.json({ error: "Fecha inválida" }, { status: 400 });
+    if (!appointmentDate) {
+      return NextResponse.json(
+        { error: "Fecha inválida" },
+        { status: 400 }
+      );
     }
 
     if (appointmentDate <= new Date()) {

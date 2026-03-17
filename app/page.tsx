@@ -239,10 +239,11 @@ export default function HomePage() {
               <input
                 className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-slate-500"
                 type="datetime-local"
+                value={form.appointmentAt}
                 onChange={(e) =>
                   setForm({
                     ...form,
-                    appointmentAt: new Date(e.target.value).toISOString(),
+                    appointmentAt: e.target.value,
                   })
                 }
                 required
