@@ -295,7 +295,7 @@ async function handleReminders(req: Request) {
 
         await sendSMS(
           appointment.phone,
-          `Recordatorio: tienes una cita en la clínica mañana ${date} a las ${time}.`
+          `Recordatorio: tienes una cita mañana en Peluquería Bella Estilo, el ${date} a las ${time}.`
         );
 
         await prisma.appointment.update({

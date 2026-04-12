@@ -193,7 +193,7 @@ export async function POST(req: Request) {
 
       await sendSMS(
         phone,
-        `Confirmación: tu cita en la clínica ha sido reservada para el ${date} a las ${time}.`
+        `Confirmación: tu cita en Peluquería Bella Estilo ha sido reservada para el ${date} a las ${time}.`
       );
     } catch (smsError) {
       console.error("Error enviando SMS de confirmación:", smsError);

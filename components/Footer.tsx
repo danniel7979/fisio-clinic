@@ -10,7 +10,7 @@ export default function Footer() {
       }}
     >
       <div style={{ marginBottom: "10px" }}>
-        © {new Date().getFullYear()} JELUDA
+        © {new Date().getFullYear()} Peluquería Bella Estilo
       </div>
 
       <div>

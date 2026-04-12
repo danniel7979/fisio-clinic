@@ -4,8 +4,8 @@ export default function PoliticaPrivacidad() {
       <h1>Política de Privacidad</h1>
 
       <p>
-        En JELUDA nos comprometemos a proteger la privacidad de los
-        usuarios.
+        En Peluquería Bella Estilo nos comprometemos a proteger la privacidad de
+        los usuarios.
       </p>
 
       <h2>Responsable del tratamiento</h2>

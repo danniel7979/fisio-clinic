@@ -14,7 +14,7 @@ export default async function AdminPage() {
   return (
     <main style={{ maxWidth: 1000, margin: "40px auto", fontFamily: "Arial" }}>
       <h1>Panel de administración</h1>
-      <p>Citas registradas</p>
+      <p>Reservas registradas</p>
 
       {appointments.length === 0 ? (
         <p>No hay citas todavía.</p>
