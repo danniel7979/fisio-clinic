@@ -199,6 +199,9 @@ export async function POST(req: Request) {
       },
     });
 
+    console.log("appointmentAt recibido:", appointmentAt);
+    console.log("appointmentDate parseado:", appointmentDate);
+
     if (existingAppointment) {
       return NextResponse.json(
         { error: "Esa fecha y hora ya están reservadas" },
@@ -212,7 +215,7 @@ export async function POST(req: Request) {
         phone,
         email: email || null,
         service,
-        appointmentAt: dbAppointmentDate,
+        appointmentAt: appointmentDate,
         notes: notes || null,
       },
     });
@@ -242,7 +245,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error: "Error interno del servidor",
-        detail: error instanceof Error ? error.message : "Error desconocido",
+        detail: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     );
