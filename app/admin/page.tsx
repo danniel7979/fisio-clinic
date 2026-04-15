@@ -4,6 +4,18 @@ import DeleteButton from "./DeleteButton";
 
 export const dynamic = "force-dynamic";
 
+function formatAppointmentDate(date: Date) {
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Europe/Madrid",
+  }).format(date);
+}
+
 export default async function AdminPage() {
   const appointments = await prisma.appointment.findMany({
     orderBy: {
@@ -45,7 +57,7 @@ export default async function AdminPage() {
                 <td style={tdStyle}>{appointment.email || "-"}</td>
                 <td style={tdStyle}>{appointment.service}</td>
                 <td style={tdStyle}>
-                  {new Date(appointment.appointmentAt).toLocaleString("es-ES")}
+                  {formatAppointmentDate(new Date(appointment.appointmentAt))}
                 </td>
                 <td style={tdStyle}>{appointment.reminderStatus}</td>
                 <td style={tdStyle}>
