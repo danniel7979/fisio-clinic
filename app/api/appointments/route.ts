@@ -108,33 +108,33 @@ function parseLocalDateTime(input: string) {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
-function toUTCFromMadridLocal(date: Date) {
-  const parts = new Intl.DateTimeFormat("en-CA", {
+function getMadridOffsetMinutes(date: Date) {
+  const tz = new Intl.DateTimeFormat("en-US", {
     timeZone: "Europe/Madrid",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hourCycle: "h23",
-  }).formatToParts(date);
+    timeZoneName: "shortOffset",
+  })
+    .formatToParts(date)
+    .find((part) => part.type === "timeZoneName")?.value;
 
-  const get = (type: string) =>
-    Number(parts.find((part) => part.type === type)?.value);
+  if (!tz) {
+    throw new Error("No se pudo obtener el offset de Europe/Madrid");
+  }
 
-  const madridUtcMs = Date.UTC(
-    get("year"),
-    get("month") - 1,
-    get("day"),
-    get("hour"),
-    get("minute"),
-    get("second")
-  );
+  const match = tz.match(/GMT([+-]\d{1,2})(?::?(\d{2}))?/);
 
-  const diff = madridUtcMs - date.getTime();
+  if (!match) {
+    throw new Error(`Offset inválido para Europe/Madrid: ${tz}`);
+  }
 
-  return new Date(date.getTime() - diff);
+  const hours = Number(match[1]);
+  const minutes = Number(match[2] || "0");
+
+  return hours * 60 + (hours >= 0 ? minutes : -minutes);
+}
+
+function toUTCFromMadridLocal(date: Date) {
+  const offsetMinutes = getMadridOffsetMinutes(date);
+  return new Date(date.getTime() - offsetMinutes * 60_000);
 }
 
 function formatDate(date: Date) {
@@ -224,7 +224,7 @@ export async function POST(req: Request) {
 
       await sendSMS(
         phone,
-        `Confirmación: tu cita en clinica de fisio ha sido reservada para el ${date} a las ${time}.`
+        `Confirmación: tu cita en Peluquería Bella Estilo ha sido reservada para el ${date} a las ${time}.`
       );
     } catch (smsError) {
       console.error("Error enviando SMS de confirmación:", smsError);
@@ -241,7 +241,10 @@ export async function POST(req: Request) {
     console.error("Error al crear la cita:", error);
 
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      {
+        error: "Error interno del servidor",
+        detail: error instanceof Error ? error.message : "Error desconocido",
+      },
       { status: 500 }
     );
   }
