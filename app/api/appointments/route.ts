@@ -108,6 +108,35 @@ function parseLocalDateTime(input: string) {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
+function toUTCFromMadridLocal(date: Date) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Madrid",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(date);
+
+  const get = (type: string) =>
+    Number(parts.find((part) => part.type === type)?.value);
+
+  const madridUtcMs = Date.UTC(
+    get("year"),
+    get("month") - 1,
+    get("day"),
+    get("hour"),
+    get("minute"),
+    get("second")
+  );
+
+  const diff = madridUtcMs - date.getTime();
+
+  return new Date(date.getTime() - diff);
+}
+
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("es-ES", {
     day: "2-digit",
@@ -160,9 +189,11 @@ export async function POST(req: Request) {
       );
     }
 
+    const dbAppointmentDate = toUTCFromMadridLocal(appointmentDate);
+
     const existingAppointment = await prisma.appointment.findFirst({
       where: {
-        appointmentAt: appointmentDate,
+        appointmentAt: dbAppointmentDate,
         reminderStatus: {
           not: "CANCELLED",
         },
@@ -182,7 +213,7 @@ export async function POST(req: Request) {
         phone,
         email: email || null,
         service,
-        appointmentAt: appointmentDate,
+        appointmentAt: dbAppointmentDate,
         notes: notes || null,
       },
     });
@@ -193,7 +224,7 @@ export async function POST(req: Request) {
 
       await sendSMS(
         phone,
-        `Confirmación: tu cita en Peluquería Bella Estilo ha sido reservada para el ${date} a las ${time}.`
+        `Confirmación: tu cita en clinica de fisio ha sido reservada para el ${date} a las ${time}.`
       );
     } catch (smsError) {
       console.error("Error enviando SMS de confirmación:", smsError);
