@@ -1,87 +1,3 @@
-
-/*
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { appointmentSchema } from "@/lib/validators";
-
-export async function POST(req: Request) {
-  try {
-    const body = await req.json();
-
-    const parsed = appointmentSchema.safeParse(body);
-
-    if (!parsed.success) {
-      return NextResponse.json(
-        {
-          error: "Datos inválidos",
-          details: parsed.error.flatten(),
-        },
-        { status: 400 }
-      );
-    }
-
-    const {
-      name,
-      phone,
-      email,
-      service,
-      appointmentAt,
-      notes,
-    } = parsed.data;
-
-    const appointmentDate = new Date(appointmentAt);
-
-    if (isNaN(appointmentDate.getTime())) {
-      return NextResponse.json({ error: "Fecha inválida" }, { status: 400 });
-    }
-
-    if (appointmentDate <= new Date()) {
-      return NextResponse.json(
-        { error: "La cita debe ser futura" },
-        { status: 400 }
-      );
-    }
-
-    const existingAppointment = await prisma.appointment.findFirst({
-      where: {
-        appointmentAt: appointmentDate,
-        reminderStatus: {
-          not: "CANCELADO",
-        },
-      },
-    });
-
-    if (existingAppointment) {
-      return NextResponse.json(
-        { error: "Esa fecha y hora ya están reservadas" },
-        { status: 409 }
-      );
-    }
-
-    const appointment = await prisma.appointment.create({
-      data: {
-        name,
-        phone,
-        email: email || null,
-        service,
-        appointmentAt: appointmentDate,
-        notes: notes || null,
-      },
-    });
-
-    return NextResponse.json(
-      { message: "Cita creada correctamente", appointment },
-      { status: 201 }
-    );
-  } catch (error) {
-    console.error("Error al crear la cita:", error);
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 }
-    );
-  }
-}*/
-
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { appointmentSchema } from "@/lib/validators";
@@ -106,35 +22,6 @@ function parseLocalDateTime(input: string) {
   const date = new Date(year, month - 1, day, hour, minute, 0, 0);
 
   return Number.isNaN(date.getTime()) ? null : date;
-}
-
-function getMadridOffsetMinutes(date: Date) {
-  const tz = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Europe/Madrid",
-    timeZoneName: "shortOffset",
-  })
-    .formatToParts(date)
-    .find((part) => part.type === "timeZoneName")?.value;
-
-  if (!tz) {
-    throw new Error("No se pudo obtener el offset de Europe/Madrid");
-  }
-
-  const match = tz.match(/GMT([+-]\d{1,2})(?::?(\d{2}))?/);
-
-  if (!match) {
-    throw new Error(`Offset inválido para Europe/Madrid: ${tz}`);
-  }
-
-  const hours = Number(match[1]);
-  const minutes = Number(match[2] || "0");
-
-  return hours * 60 + (hours >= 0 ? minutes : -minutes);
-}
-
-function toUTCFromMadridLocal(date: Date) {
-  const offsetMinutes = getMadridOffsetMinutes(date);
-  return new Date(date.getTime() - offsetMinutes * 60_000);
 }
 
 function formatDate(date: Date) {
@@ -189,18 +76,17 @@ export async function POST(req: Request) {
       );
     }
 
-    const dbAppointmentDate = new Date(appointmentDate.getTime());
+    console.log("appointmentAt recibido:", appointmentAt);
+    console.log("appointmentDate parseado:", appointmentDate);
+
     const existingAppointment = await prisma.appointment.findFirst({
       where: {
-        appointmentAt: dbAppointmentDate,
+        appointmentAt: appointmentDate,
         reminderStatus: {
           not: "CANCELLED",
         },
       },
     });
-
-    console.log("appointmentAt recibido:", appointmentAt);
-    console.log("appointmentDate parseado:", appointmentDate);
 
     if (existingAppointment) {
       return NextResponse.json(
