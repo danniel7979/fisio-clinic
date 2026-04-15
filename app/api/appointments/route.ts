@@ -189,8 +189,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const dbAppointmentDate = toUTCFromMadridLocal(appointmentDate);
-
+    const dbAppointmentDate = new Date(appointmentDate.getTime());
     const existingAppointment = await prisma.appointment.findFirst({
       where: {
         appointmentAt: dbAppointmentDate,
